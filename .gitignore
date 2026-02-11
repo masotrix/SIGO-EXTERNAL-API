@@ -1,0 +1,10 @@
+node_modules/
+*.sqlite
+*.sqlite-journal
+*.csv
+*.json
+.env
+*.swp
+*.swo
+*~
+src

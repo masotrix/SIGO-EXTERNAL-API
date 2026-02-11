@@ -1,0 +1,17 @@
+export default {
+    'De Tarapacá': '1',
+    'De Antofagasta': '2',
+    'De Atacama': '3',
+    'De Coquimbo': '4',
+    'De Valparaíso': '5',
+    'Del Libertador Gral. Bernardo O’Higgins': '6',
+    'Del Maule': '7',
+    'Del Biobío': '8',
+    'De La Araucanía': '9',
+    'De Los Lagos': '10',
+    'De Aisén del Gral. Carlos Ibáñez del Campo': '11',
+    'De Magallanes y de La Antártica Chilena': '12',
+    'Metropolitana de Santiago': '13',
+    'De Los Ríos': '14',
+    'De Arica y Parinacota': '15',
+};
