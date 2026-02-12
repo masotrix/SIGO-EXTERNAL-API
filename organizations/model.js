@@ -13,8 +13,7 @@ export default (serviceName) => (orm, types) => {
 
 
   schema.associate = MODELS => {
-    /*
-    schema.hasMany(MODELS.patient, {
+    schema.hasMany(MODELS.patients, {
         foreignKey: "organizationId"
     });
 
@@ -22,6 +21,19 @@ export default (serviceName) => (orm, types) => {
         foreignKey: "organizationId"
     });
 
+    schema.hasMany(MODELS.tasks, {
+        foreignKey: "responsibleOrganizationId",
+    });
+
+    schema.hasMany(MODELS.sharedCases, {
+        foreignKey: "organizationId",
+    });
+
+    schema.hasMany(MODELS.sharedCases, {
+        foreignKey: "originOrganizationId",
+    });
+
+    /*
     schema.hasMany(MODELS.role, {
         foreignKey: "organizationId"
     });

@@ -8,3 +8,4 @@ node_modules/
 *.swo
 *~
 src
+__pycache__

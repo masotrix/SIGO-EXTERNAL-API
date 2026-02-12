@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 import * as validations from '../../validations.js';
 import communeMap from '../../communeMap.js';
 import provinceMap from '../../provinceMap.js';
@@ -11,6 +13,10 @@ export const sexMap = {
     'NO INFORMADO': '93',
     'DESCONOCIDO': '99',
 };
+
+export const inverseSexMap = Object.fromEntries(
+  Object.entries(sexMap).map(([key, value]) => [value, key])
+);
 
 export const documentTypeMap = {
     'RUT': '1',
@@ -128,5 +134,31 @@ export default async ({ body, MODELS, model }) => {
                 validations.email({ field, body })),
     };
 
-    return await validations.validate(body, validationDic);
+    const defaultDic = {
+
+        id: randomUUID(),
+        trackCode: '9',
+
+        documentTypeCode: body?.documentType ?
+            documentTypeMap[body.documentType] : null,
+
+        biologicalSexCode: body?.biologicalSex ?
+            sexMap[body.biologicalSex] : null,
+
+        forecastCode: body?.healthInsurance ?
+            healthInsuranceMap[body.healthInsurance] : null,
+
+        communeCode: body?.commune ? communeMap[body.commune] : null,
+
+        provinceCode: body?.province ?
+            provinceMap[body.province] : null,
+
+        regionCode: body?.region ? regionMap[body.region] : null,
+
+        nationalityCode:
+            body?.nationality ? nationalityMap[body.nationality] : null,
+    }
+
+    return await validations.validate({
+        body, validationDic, MODELS, model, defaultDic });
 }

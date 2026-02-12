@@ -1,5 +1,3 @@
-import { randomUUID } from 'crypto';
-
 import validate from './validate.js';
 
 export default async ({ body, MODELS }) => {
@@ -15,10 +13,7 @@ export default async ({ body, MODELS }) => {
     }
 
     const newOrganization =
-        await MODELS.organizations.create({
-            id: randomUUID(), ...body });
+        await MODELS.organizations.create(body);
 
-    return {
-        body: newOrganization.toJSON()
-    };
+    return { body: newOrganization.toJSON() };
 }

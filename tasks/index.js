@@ -1,12 +1,12 @@
 import get from './get/index.js'
-import post from './post/index.js'
+import postExam from './postExam/index.js'
 import model from './model.js'
 
 export default {
-    name: 'cases',
+    name: 'tasks',
     model,
     endpoints: {
         get,
-        post
+        postExam,
     }
 };

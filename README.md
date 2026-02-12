@@ -1,3 +1,24 @@
+## Dudas
+
+- Patient:
+  - trackCode: '9' siempre?
+- Mandatory Notifications:
+  - Notifier name y document number: Obligatorio?
+  - diagnosticBasis: 'SOLID\_TUMOR' siempre?
+  - examType: 'BIOPSY' siempre?
+  - Siguen siendo optativas extensions, tnmprefix y los t n m?
+  - sampleCollectionDate optativo?
+  - Todo lo demas obligatorio? (era obligatorio en las cargas masivas)
+
+## TODO
+
+- Tasks Exams:
+  - Validaciones dias faltantes remainderDaysBefore
+- Mandatory Notifications:
+  - Validaciones morfologicas
+  - Otras validaciones?
+
+
 # Plan
 
 - Insertar los pacientes nuevos

@@ -22,6 +22,17 @@ export const notEmpty = ({ field, body }) => {
     return false;
 }
 
+export const integer = ({ field, body }) => {
+
+    if (!body?.[field]) return notEmpty({ field, body });
+
+    if (Number.isInteger(body[field])) {
+        return { [field]: `Valor '${body[field]}' no es un entero` }
+    }
+
+    return false;
+}
+
 export const string = ({ field, body }) => {
 
     if (!body?.[field]) return notEmpty({ field, body });
@@ -46,7 +57,7 @@ export const bool = ({ field, body }) => {
 
 //export const fuzzyCategorical =
 export const categorical =
-    ({ field, body, categories }) => {
+    ({ field, body, categories, match=60 }) => {
 
     if (!body?.[field]) return notEmpty({ field, body });
 
@@ -57,7 +68,7 @@ export const categorical =
     const results = fuzz.extract(body[field], categories, { limit: 3 });
 
     const validSuggestions =
-            results.filter(r => r[1] > 60).map(r => `'${r[0]}'`);
+            results.filter(r => r[1] > match).map(r => `'${r[0]}'`);
 
     let errorMsg = `'${body[field]}' no existe.`;
 
@@ -151,6 +162,81 @@ export const date =
     return false;
 }
 
+export const lessDate = ({ field1, field2, body }) => {
+
+    const errDate1 = date({ field: field1, body, MODELS, model });
+    if (errDate1) return errDate1;
+
+    const errDate2 = date({ field: field2, body, MODELS, model });
+    if (errDate2) return errDate2;
+
+    const [year1, month1, day1] = body[field1].split("-").map(Number);
+    const date1 = new Date(year1, month1 - 1, day1);
+
+    const [year2, month2, day2] = body[field2].split("-").map(Number);
+    const date2 = new Date(year2, month2 - 1, day2);
+
+    if (date2 < date1) {
+        return {
+            [field2]: `Fecha "${field2}"='${body[field2]}' `+
+                `es menor que fecha "${field1}"='${body[field1]}'`
+        }
+    }
+
+    return false;
+}
+
+export const daysBetween = ({ field1, field2, field3, body }) => {
+
+    const errDate1 = date({ field: field1, body, MODELS, model });
+    if (errDate1) return errDate1;
+
+    const errDays = integer({
+        field: field2, body, MODELS, model });
+    if (errDays) return errDays;
+
+    const errDate2 = date({ field: field3, body, MODELS, model });
+    if (errDate2) return errDate2;
+
+    const [year1, month1, day1] = body[field1].split("-").map(Number);
+    const date1 = new Date(year1, month1 - 1, day1);
+
+    const [year2, month2, day2] = body[field3].split("-").map(Number);
+    const date2 = new Date(year2, month2 - 1, day2);
+
+    const diferenciaMs = date2 - date1;
+    const dias = diferenciaMs / (1000 * 60 * 60 * 24);
+
+    const diasEsperados = body[field2];
+
+    if (dias !== diasEsperados) {
+        return {
+            [field2]: `Días entre fechas `+
+                `"${field1}"='${body[field1]}' `+
+                `y "${field3}"='${body[field3]}' `+
+                `hay '${diasEsperados}' días pero `+
+                `"${field2}"='${body[field2]}'`
+        }
+    }
+
+    return false;
+}
+
+export const requiredIf = ({ field1, value1, field2, body }) => {
+
+    const field1empty = notEmpty({ field: field1, body });
+    if (field1empty) return false;
+
+    const field2empty = notEmpty({ field: field2, body });
+    if (field2empty) {
+        return { [field2]: `Campo "${field1}"='${body[field1]}' `+
+            `no vacío, pero campo "${field2}"='${body[field2]}' `+
+            `sin información` };
+    }
+
+    return false;
+}
+
 export const exists =
     async ({ field, body, MODELS, model }) => {
 
@@ -162,7 +248,7 @@ export const exists =
         where: { id: body[field] } });
 
     if (!res) {
-        return { [field]: `No existe '${model}' con id `+
+        return { [field]: `No existe instancia de '${model}' con `+
             `"${field}"='${body[field]}'` };
     }
 
@@ -188,10 +274,17 @@ export const unique =
 }
 
 export const rut =
-    async ({ field, body, MODELS, model }) => {
+    async ({ field, body, MODELS, model, checkExistence = true }) => {
 
-    const uniq = await unique({ field, body, MODELS, model });
-    if (uniq) return uniq;
+    if (!body?.[field]) return notEmpty({ field, body });
+
+    if (typeof body[field] !== "string") return string({ field, body });
+
+
+    if (checkExistence) {
+        const uniq = await unique({ field, body, MODELS, model });
+        if (uniq) return uniq;
+    }
 
     const rut =
         body[field].replace(/\./g, "").replace(/-/g, "")
@@ -231,7 +324,9 @@ export const rut =
     return false;
 }
 
-export const validate = async (body, validationDic) => {
+export const validate =
+    async ({ body, validationDic, MODELS, model,
+        extraRules=[], defaultDic={} }) => {
 
     const errors = [];
 
@@ -242,7 +337,7 @@ export const validate = async (body, validationDic) => {
         if (!(field in validationDic)) {
             errors.push(
                 { [field]: `Campo '${field}' inválido. `+
-                    `Campos válidos: [${cats.join(', ')}]` });
+                    `Campos válidos: [${fields.join(', ')}]` });
         }
     }
 
@@ -251,8 +346,55 @@ export const validate = async (body, validationDic) => {
         if (error) errors.push(error);
     }
 
+    for (let val in extraRules) {
+        const error = await val(body);
+        if (error) errors.push(error);
+    }
+
     if (errors.length) return errors;
+
+    for (let field in defaultDic) {
+        if (field in body && body[field]) continue;
+        if (!defaultDic[field]) continue;
+        body[field] = defaultDic[field];
+    }
+
+    for (let field in body) {
+        if (body[field]) continue;
+
+        const modelField = MODELS[model].rawAttributes[field];
+
+        if (modelField && 'defaultValue' in modelField) {
+
+            body[field] = undefined;
+
+        } else {
+
+            body[field] = null;
+
+        }
+    }
+
     return null;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

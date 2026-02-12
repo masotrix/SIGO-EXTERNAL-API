@@ -1,12 +1,14 @@
+import { randomUUID } from 'crypto';
+
 import * as validations from '../../validations.js';
 
-import { sexMap } from '../patients/post/valid.js'
+import { inverseSexMap } from '../../patients/post/validate.js'
 
 import cieSexes from './cieSexes.js';
 import cieTexts from './cieTexts.js';
 
 const clinicalStatusV = ['SUSPECTED', 'REFUTED', 'CONFIRMED'];
-const administrativeStatusV = [
+export const administrativeStatusV = [
     'CASE_CLOSED',
     'DIAGNOSIS',
     'STAGING',
@@ -26,25 +28,28 @@ const statusV = [
     'DELETED',
 ];
 
-const patologyCodeValidation = async ({ field, value, body }) => {
+const patologyCodeValidation = async ({ field, body, MODELS }) => {
 
     const categoryError = validations.categorical({
-            field, value, categories: Object.keys(cieSexes) })
+            field, body, categories: Object.keys(cieSexes) })
 
     if (categoryError) return categoryError;
 
     const notExistsPatient = await validations.exists({
-        field: 'patientId', value: body.patientId,
-        MODESL, model: 'patients' });
+        field: 'patientId', body, MODELS, model: 'patients' });
 
-    if (notExistsPatient) return false;
+    if (notExistsPatient) {
+        return { [field]: `Paciente con id='${body.patientId}' `+
+            `no existe en base de datos` }
+    };
 
     const patientObj = await MODELS.patients.findOne({
-        where: { id: body.patientId });
+        where: { id: body.patientId } });
 
-    const sex = sexMap[patientObj.toJSON().biologicalSexCode];
+    const sex = inverseSexMap[patientObj.toJSON().biologicalSexCode];
+    const value = body[field]
 
-    if (sex !== cieSexes[value]) {
+    if (cieSexes[value]!=='AMBOS' && sex !== cieSexes[value]) {
         return { [field]: `Sexo de paciente: '${sex}',` +
             ` sexo de patología "${value}": '${cieSexes[value]}'` };
     }
@@ -57,60 +62,55 @@ const patologyCodeValidation = async ({ field, value, body }) => {
             `texto asociado en base de datos: '${cieTexts[value]}'` };
 
     }
+
+    return false;
 }
 
-export default async ({ body, MODELS }) => {
+export default async ({ body, MODELS, model }) => {
 
-    const validate = {
+    const validationDic = {
         organizationId:
-            (field, value) => await validations.exists({
-                field, value, MODELS, model: 'organizations' }),
+            async (field, body) => await validations.exists({
+                field, body, MODELS, model: 'organizations' }),
 
         patientId:
-            (field, value) => await validations.exists({
-                field, value, MODELS, model: 'patients' }),
+            async (field, body) => await validations.exists({
+                field, body, MODELS, model: 'patients' }),
 
         laterality:
-            (field, value) => validations.optional({ value },
+            (field, body) => validations.optional({ body },
                 validations.categorical({
-                    field, value, categories: lateralityV })),
+                    field, body, categories: lateralityV })),
 
         clinicalStatus:
-            (field, value) => validations.categorical({
-                field, value, categories: clinicalStatusV }),
+            (field, body) => validations.categorical({
+                field, body, categories: clinicalStatusV }),
 
         administrativeStatus:
-            (field, value) => validations.categorical({
-                field, value, categories: administrativeStatusV }),
+            (field, body) => validations.categorical({
+                field, body, categories: administrativeStatusV }),
 
         patologyCode:
-            (field, value) => await patologyCodeValidation({
-                field, value, body }),
+            async (field, body) =>
+                await patologyCodeValidation({ field, body, MODELS }),
 
-        diagnostisDate:
-            (field, value) => validations.categorical({
-                field, value, categories: cieSexes }),
+        patologyText:
+            (field, body) => validations.categorical({ field, body,
+                categories: Object.values(cieTexts) }),
+
+        diagnosisDate:
+            (field, body) => validations.date({ field, body }),
 
         status:
-            (field, value) => validations.optional({ value },
+            (field, body) => validations.optional({ body },
                 validations.categorical({
-                    field, value, categories: statusV })),
+                    field, body, categories: statusV })),
     };
 
-    const errors = [];
-
-    for (let k in body) {
-        if (!(k in validate)) {
-            errors.push(
-                { [k]: `Campo ${k} inválido. `+
-                    `Campos válidos: ${Object.keys(validate)}` });
-            continue;
-        }
-
-        const error = validate[k](k, body[k]);
-        if (error) errors.push(error);
+    const defaultDic = {
+        id: randomUUID(),
     }
 
-    if (errors.length) return errors;
-    return null;
+    return await validations.validate({
+        body, validationDic, MODELS, model, defaultDic });
 }

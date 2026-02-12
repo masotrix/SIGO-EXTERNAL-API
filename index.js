@@ -2,17 +2,17 @@ import { getNewAPI } from 'minimonolith';
 
 import organizations from './organizations/index.js'
 import patients from './patients/index.js'
-
-/*
 import cases from './cases/index.js'
 import clinicalNotes from './clinicalNotes/index.js'
-import history from './history/index.js'
 import sharedCases from './sharedCases/index.js'
-import task from './task/index.js'
+import tasks from './tasks/index.js'
+import mandatoryNotifications from './mandatoryNotifications/index.js'
+
+/*
+import history from './history/index.js'
 import file from './file/index.js'
 import resolutions from './resolutions/index.js'
 import activities from './activities/index.js'
-import mandatoryNotifications from './mandatoryNotifications/index.js'
 */
 
 const API = await getNewAPI({
@@ -21,17 +21,17 @@ const API = await getNewAPI({
 
 await API.postModule(organizations);
 await API.postModule(patients);
-
-/*
 await API.postModule(cases);
 await API.postModule(clinicalNotes);
-await API.postModule(history);
 await API.postModule(sharedCases);
-await API.postModule(task);
+await API.postModule(tasks);
+await API.postModule(mandatoryNotifications);
+
+/*
+await API.postModule(history);
 await API.postModule(file);
 await API.postModule(resolutions);
 await API.postModule(activities);
-await API.postModule(mandatoryNotifications);
 */
 
 await API.postDatabaseModule({

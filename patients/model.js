@@ -11,7 +11,8 @@ export default (serviceName) => (orm, types) => {
     secondLastName: { type: types.TEXT },
     socialName: { type: types.TEXT },
     bornDate: { type: types.DATE },
-    isDeceased: { type: types.BOOLEAN, defaultValue: false },
+    isDeceased: { type: types.BOOLEAN,
+        allowNull: false, defaultValue: false },
     biologicalSexCode: { type: types.TEXT },
     genderCode: { type: types.TEXT },
     nationalityCode: { type: types.TEXT },
@@ -40,11 +41,11 @@ export default (serviceName) => (orm, types) => {
         foreignKey: "organizationId"
     });
 
-    /*
     schema.hasMany(MODELS.cases, {
         foreignKey: "patientId"
     });
 
+    /*
     schema.hasMany(MODELS.history, {
         foreignKey: "patientId"
     });

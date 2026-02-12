@@ -35,20 +35,24 @@ export default (serviceName) => (orm, types) => {
         foreignKey: "patientId"
     });
 
+    schema.hasMany(MODELS.tasks, {
+        foreignKey: "caseId"
+    });
+
+    schema.hasMany(MODELS.sharedCases, {
+        foreignKey: "caseId"
+    });
+
+    schema.hasMany(MODELS.clinicalNotes, {
+        foreignKey: "caseId"
+    });
+
     /*
     schema.hasMany(MODELS.stagings, {
         foreignKey: "caseId"
     });
 
     schema.hasMany(MODELS.resolutions, {
-        foreignKey: "caseId"
-    });
-
-    schema.hasMany(MODELS.tasks, {
-        foreignKey: "caseId"
-    });
-
-    schema.hasMany(MODELS.sharedCases, {
         foreignKey: "caseId"
     });
 
@@ -61,10 +65,6 @@ export default (serviceName) => (orm, types) => {
     });
 
     schema.hasMany(MODELS.history, {
-        foreignKey: "caseId"
-    });
-
-    schema.hasMany(MODELS.clinicalNotes, {
         foreignKey: "caseId"
     });
 

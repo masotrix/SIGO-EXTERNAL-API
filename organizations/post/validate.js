@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 import * as validations from '../../validations.js';
 import communeMap from '../../communeMap.js';
 import provinceMap from '../../provinceMap.js';
@@ -42,5 +44,8 @@ export default async ({ body, MODELS, model }) => {
             (field, body) => validations.string({ field, body }),
     };
 
-    return await validations.validate(body, validationDic);
+    const defaultDic = { id: randomUUID(), };
+
+    return await validations.validate({
+        body, validationDic, MODELS, model, defaultDic });
 }

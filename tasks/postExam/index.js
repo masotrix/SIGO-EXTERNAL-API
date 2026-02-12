@@ -3,13 +3,13 @@ import validate from './validate.js';
 export default async ({ body, MODELS }) => {
 
     const validation = await validate({
-        body, MODELS, model: 'cases' });
+        body, MODELS, model: 'tasks' });
 
     if (validation) {
         return { status: 400, body: validation };
     }
 
-    const newCase = await MODELS.cases.create(body);
+    const newTask = await MODELS.tasks.create(body);
 
-    return { body: newCase.toJSON() };
+    return { body: newTask.toJSON() };
 }
