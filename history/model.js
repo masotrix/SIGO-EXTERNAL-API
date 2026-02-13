@@ -5,7 +5,7 @@ export default (serviceName) => (orm, types) => {
     id: { type: types.TEXT, primaryKey: true },
     eventType: { type: types.TEXT, allowNull: false },
     date: { type: types.DATE, allowNull: false,
-    defaultValue: types.NOW },
+        defaultValue: types.NOW },
     userId: { type: types.TEXT },
     patientId: { type: types.TEXT },
     caseId: { type: types.TEXT },
@@ -22,9 +22,11 @@ export default (serviceName) => (orm, types) => {
 
   schema.associate = MODELS => {
 
+    /*
     schema.belongsTo(MODELS.users, {
         foreignKey: "userId"
     });
+    */
 
     schema.belongsTo(MODELS.patients, {
         foreignKey: "patientId"
@@ -34,6 +36,7 @@ export default (serviceName) => (orm, types) => {
         foreignKey: "caseId"
     });
 
-    return schema;
   }
+
+  return schema;
 }

@@ -48,7 +48,7 @@ export default async ({ body, MODELS, model }) => {
                     field, body, MODELS, model: 'organizations' })),
     };
 
-    const extraRules = [
+    const extraValidations = [
         body => validations.requiredIf({
             field1: 'status', value1: 'COMPLETED',
             field2: 'dueDate', body }),
@@ -56,9 +56,11 @@ export default async ({ body, MODELS, model }) => {
         body => validations.lessDate({
             field1: 'startDate', field2: 'dueDate', body }),
 
+        /*
         body => validations.daysBetween({
             field1: 'startDate', field2: 'reminderDaysBefore',
             field3: 'dueDate', body }),
+        */
     ];
 
     const associatedCaseObj =
@@ -72,7 +74,8 @@ export default async ({ body, MODELS, model }) => {
     }
 
     return await validations.validate({
-        body, validationDic, MODELS, model, defaultDic });
+        body, validationDic, MODELS, model,
+        extraValidations, defaultDic });
 }
 
 

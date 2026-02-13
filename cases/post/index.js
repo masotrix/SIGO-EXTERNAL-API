@@ -1,6 +1,6 @@
 import validate from './validate.js';
 
-export default async ({ body, MODELS }) => {
+export default async ({ body, MODELS, MODULES }) => {
 
     const validation = await validate({
         body, MODELS, model: 'cases' });
@@ -9,7 +9,14 @@ export default async ({ body, MODELS }) => {
         return { status: 400, body: validation };
     }
 
-    const newCase = await MODELS.cases.create(body);
+    const newCaseObj = await MODELS.cases.create(body);
+    const newCase = newCaseObj.toJSON()
 
-    return { body: newCase.toJSON() };
+    const newHistory = await MODULES.history.postCase({
+        patientId: newCase.patientId,
+        caseId: newCase.id,
+        originOrganizationId: newCase.organizationId,
+    });
+
+    return { body: newCase };
 }

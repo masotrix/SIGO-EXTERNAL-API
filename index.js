@@ -7,9 +7,9 @@ import clinicalNotes from './clinicalNotes/index.js'
 import sharedCases from './sharedCases/index.js'
 import tasks from './tasks/index.js'
 import mandatoryNotifications from './mandatoryNotifications/index.js'
+import history from './history/index.js'
 
 /*
-import history from './history/index.js'
 import file from './file/index.js'
 import resolutions from './resolutions/index.js'
 import activities from './activities/index.js'
@@ -26,9 +26,9 @@ await API.postModule(clinicalNotes);
 await API.postModule(sharedCases);
 await API.postModule(tasks);
 await API.postModule(mandatoryNotifications);
+await API.postModule(history);
 
 /*
-await API.postModule(history);
 await API.postModule(file);
 await API.postModule(resolutions);
 await API.postModule(activities);

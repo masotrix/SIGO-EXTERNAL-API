@@ -2,6 +2,8 @@
 
 - Patient:
   - trackCode: '9' siempre?
+- Task
+  - Especificar dueDate cuando status COMPLETED ?
 - Mandatory Notifications:
   - Notifier name y document number: Obligatorio?
   - diagnosticBasis: 'SOLID\_TUMOR' siempre?
@@ -9,14 +11,18 @@
   - Siguen siendo optativas extensions, tnmprefix y los t n m?
   - sampleCollectionDate optativo?
   - Todo lo demas obligatorio? (era obligatorio en las cargas masivas)
+- History
+  - En eventos que no son shareCase,
+    se usa originOrganization o targetOrganization?
 
 ## TODO
 
 - Tasks Exams:
   - Validaciones dias faltantes remainderDaysBefore
-- Mandatory Notifications:
-  - Validaciones morfologicas
-  - Otras validaciones?
+
+
+- Tests
+  - Mandatory Notifications:
 
 
 # Plan

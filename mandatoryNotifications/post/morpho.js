@@ -1,4 +1,4 @@
-export default {
+export const morpho = {
     '8000/0': [
         'Neoplasia, benigno',
         'Tumor benigno',
@@ -4438,3 +4438,12 @@ export default {
         'Síndrome mielodisplásico con sideroblastos en anillo y displasia multilinaje',
     ],
 }
+
+export const inverseMorpho = Object.entries(morpho).reduce(
+    (acc, [key, values]) => {
+  values.forEach(value => {
+    acc[value] = key;
+  });
+  return acc;
+}, {});
+

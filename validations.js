@@ -26,7 +26,7 @@ export const integer = ({ field, body }) => {
 
     if (!body?.[field]) return notEmpty({ field, body });
 
-    if (Number.isInteger(body[field])) {
+    if (!Number.isInteger(body[field])) {
         return { [field]: `Valor '${body[field]}' no es un entero` }
     }
 
@@ -55,7 +55,26 @@ export const bool = ({ field, body }) => {
     return false;
 }
 
-//export const fuzzyCategorical =
+export const getFuzzyExamples =
+    ({ field, body, categories, match=60 }) => {
+
+    if (!body?.[field]) return notEmpty({ field, body });
+
+    if (typeof body[field] !== "string") return string({ field, body });
+
+    const results = fuzz.extract(body[field], categories, { limit: 3 });
+
+    const rawSuggestions =
+            results.filter(r => r[1] > match);
+
+    const validSuggestions = rawSuggestions.map(
+        r => [r[0], fuzz.ratio(body[field], r[0],
+            { full_process: false })]);
+
+    return validSuggestions;
+}
+
+
 export const categorical =
     ({ field, body, categories, match=60 }) => {
 
@@ -65,10 +84,8 @@ export const categorical =
 
     if (categories.includes(body[field])) return false;
 
-    const results = fuzz.extract(body[field], categories, { limit: 3 });
-
-    const validSuggestions =
-            results.filter(r => r[1] > match).map(r => `'${r[0]}'`);
+    const validSuggestions = getFuzzyExamples({
+        field, body, categories, match }).map(sugg => "'"+sugg[0]+"'");
 
     let errorMsg = `'${body[field]}' no existe.`;
 
@@ -164,10 +181,10 @@ export const date =
 
 export const lessDate = ({ field1, field2, body }) => {
 
-    const errDate1 = date({ field: field1, body, MODELS, model });
+    const errDate1 = date({ field: field1, body });
     if (errDate1) return errDate1;
 
-    const errDate2 = date({ field: field2, body, MODELS, model });
+    const errDate2 = date({ field: field2, body });
     if (errDate2) return errDate2;
 
     const [year1, month1, day1] = body[field1].split("-").map(Number);
@@ -188,14 +205,13 @@ export const lessDate = ({ field1, field2, body }) => {
 
 export const daysBetween = ({ field1, field2, field3, body }) => {
 
-    const errDate1 = date({ field: field1, body, MODELS, model });
+    const errDate1 = date({ field: field1, body });
     if (errDate1) return errDate1;
 
-    const errDays = integer({
-        field: field2, body, MODELS, model });
+    const errDays = integer({ field: field2, body });
     if (errDays) return errDays;
 
-    const errDate2 = date({ field: field3, body, MODELS, model });
+    const errDate2 = date({ field: field3, body });
     if (errDate2) return errDate2;
 
     const [year1, month1, day1] = body[field1].split("-").map(Number);
@@ -214,7 +230,7 @@ export const daysBetween = ({ field1, field2, field3, body }) => {
             [field2]: `Días entre fechas `+
                 `"${field1}"='${body[field1]}' `+
                 `y "${field3}"='${body[field3]}' `+
-                `hay '${diasEsperados}' días pero `+
+                `son '${dias}' pero `+
                 `"${field2}"='${body[field2]}'`
         }
     }
@@ -326,7 +342,7 @@ export const rut =
 
 export const validate =
     async ({ body, validationDic, MODELS, model,
-        extraRules=[], defaultDic={} }) => {
+        extraValidations=[], defaultDic={} }) => {
 
     const errors = [];
 
@@ -346,7 +362,7 @@ export const validate =
         if (error) errors.push(error);
     }
 
-    for (let val in extraRules) {
+    for (let val of extraValidations) {
         const error = await val(body);
         if (error) errors.push(error);
     }
