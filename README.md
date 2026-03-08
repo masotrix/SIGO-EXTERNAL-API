@@ -1,3 +1,59 @@
+# Seguimiento Oncológico External API
+
+
+### Requisitos Previos
+
+* Docker y Docker Compose instalados en tu máquina.
+* Asegúrate de que el puerto **8080** esté libre en tu equipo local.
+
+### 1. Levantar la Infraestructura
+
+Para construir la imagen y levantar el contenedor por primera vez (o después de instalar nuevas dependencias en `package.json`), ejecuta el siguiente comando en la raíz del proyecto:
+
+```bash
+docker-compose up --build
+
+```
+
+*Nota: Si no has realizado cambios en las dependencias y solo modificaste el código fuente, puedes omitir el flag `--build` y simplemente usar `docker-compose up`.*
+
+Una vez que veas en la consola los mensajes de inicialización (`INFO: DB synchronized` e `INFO: API listening...`), la API estará lista para recibir peticiones.
+
+### 2. Probar la API
+
+Con el contenedor corriendo, puedes enviar peticiones al puerto `8080` de tu `localhost`.
+
+Puedes utilizar el script de Python incluido en el proyecto (`test.py`) para verificar la creación de organizaciones, pacientes o notas clínicas. Abre una **nueva terminal** y ejecuta:
+
+```bash
+python test.py
+
+```
+
+*(Asegúrate de que la variable `domain` dentro de `test.py` esté configurada apuntando a `http://localhost:8080`).*
+
+### 3. Ver Logs en Vivo
+
+Si necesitas hacer *troubleshooting* o ver los registros de las peticiones mientras pruebas el sistema de autenticación de terceros o la lógica de negocio, puedes seguir los logs del contenedor en tiempo real con:
+
+```bash
+docker logs -f seguimiento-external-api
+
+```
+
+### 4. Detener y Limpiar
+
+Para apagar el servidor de forma segura, presiona `Ctrl + C` en la terminal donde está corriendo.
+
+Si necesitas limpiar la base de datos en memoria o forzar la recreación de los volúmenes, utiliza:
+
+```bash
+docker-compose down -v
+
+```
+
+
+
 ## TODO
 
 - Tasks Treatments
