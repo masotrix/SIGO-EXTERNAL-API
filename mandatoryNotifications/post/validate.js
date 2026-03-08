@@ -63,9 +63,6 @@ const morphologyDescriptionValidation = (field, body) => {
 
         if (!morphoTextErrors) { return false; }
 
-        console.log('check', `'${body[field]}'`,
-            morpho[body['morphologyCode']]);
-
         return {
             [field]: `Descripción morfológica '${body[field]}' `+
                 `tiene código morfológico asociado `+
@@ -170,36 +167,36 @@ export default async ({ body, MODELS, model }) => {
                 categories: differentiationGradeV }),
 
         extension:
-            (field, body) => validations.optional({ body },
+            (field, body) => validations.optional({ field, body },
                 validations.categorical({ field, body,
                     categories: extensionV })),
 
         stagingPrefix:
-            (field, body) => validations.optional({ body },
+            (field, body) => validations.optional({ field, body },
                 validations.categorical({ field, body,
                     categories: Object.keys(stagingPrefixMap) })),
 
-        t: (field, body) => validations.optional({ body },
+        t: (field, body) => validations.optional({ field, body },
                 validations.categorical({ field, body,
                     categories: tV })),
 
-        n: (field, body) => validations.optional({ body },
+        n: (field, body) => validations.optional({ field, body },
                 validations.categorical({
                     field, body, categories: nV })),
 
-        m: (field, body) => validations.optional({ body },
+        m: (field, body) => validations.optional({ field, body },
                 validations.categorical({
                     field, body, categories: mV })),
 
         sampleCollectionDate:
-            (field, body) => validations.optional({ body },
+            (field, body) => validations.optional({ field, body },
                 validations.date({ field, body })),
 
         resultDate:
             (field, body) => validations.date({ field, body }),
 
         notifierName:
-            (field, body) => validations.optional({ body },
+            (field, body) => validations.optional({ field, body },
                 validations.string({ field, body })),
 
         notifierDocumentNumber: 

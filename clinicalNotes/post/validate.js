@@ -2,11 +2,6 @@ import { randomUUID } from 'crypto';
 
 import * as validations from '../../validations.js';
 
-const statusV = [
-    'ACTIVE',
-    'INACTIVE',
-];
-
 export default async ({ body, MODELS, model }) => {
 
     const validationDic = {
@@ -16,17 +11,13 @@ export default async ({ body, MODELS, model }) => {
 
         content:
             (field, body) => validations.string({ field, body }),
-
-        status:
-            (field, body) => validations.optional({ body },
-                validations.categorical({
-                    field, body, categories: statusV })),
     };
 
     const defaultDic = {
         id: randomUUID(),
         createdAt: new Date(),
         updatedAt: new Date(),
+        status: 'ACTIVE',
     }
 
     return await validations.validate({

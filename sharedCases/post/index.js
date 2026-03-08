@@ -23,5 +23,9 @@ export default async ({ body, MODELS, MODULES }) => {
         targetOrganizationId: newSharedCase.organizationId,
     });
 
+    if (newHistory.status === 400) {
+        return { status: 400, body: newHistory.body };
+    }
+
     return { body: newSharedCase };
 }

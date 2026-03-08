@@ -18,20 +18,20 @@ export default async ({ body, MODELS, model }) => {
                 field, body, MODELS, model: 'cases' }),
 
         startDate:
-            (field, body) => validations.optional({ body },
+            (field, body) => validations.optional({ field, body },
                 validations.date({ field, body })),
 
         reminderDaysBefore:
-            (field, body) => validations.optional({ body },
+            (field, body) => validations.optional({ field, body },
                 validations.integer({ field, body })),
 
         administrativeStatus:
-            (field, body) => validations.optional({ body },
+            (field, body) => validations.optional({ field, body },
                 validations.categorical({ field, body,
                     categories: administrativeStatusV })),
 
         dueDate:
-            (field, body) => validations.optional({ body },
+            (field, body) => validations.optional({ field, body },
                 validations.date({ field, body })),
 
         status:
@@ -39,11 +39,11 @@ export default async ({ body, MODELS, model }) => {
                 field, body, categories: statusV }),
 
         comments:
-            (field, body) => validations.optional({ body },
+            (field, body) => validations.optional({ field, body },
                 validations.string({ field, body })),
 
         responsibleOrganizationId:
-            async (field, body) => validations.optional({ body },
+            async (field, body) => validations.optional({ field, body },
                 await validations.exists({
                     field, body, MODELS, model: 'organizations' })),
     };

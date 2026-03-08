@@ -18,5 +18,9 @@ export default async ({ body, MODELS, MODULES }) => {
         originOrganizationId: newCase.organizationId,
     });
 
+    if (newHistory.status === 400) {
+        return { status: 400, body: newHistory.body };
+    }
+
     return { body: newCase };
 }

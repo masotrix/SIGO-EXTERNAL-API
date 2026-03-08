@@ -47,8 +47,7 @@ export default (serviceName) => (orm, types) => {
         foreignKey: "caseId"
     });
 
-    /*
-    schema.hasMany(MODELS.stagings, {
+    schema.hasMany(MODELS.history, {
         foreignKey: "caseId"
     });
 
@@ -56,15 +55,16 @@ export default (serviceName) => (orm, types) => {
         foreignKey: "caseId"
     });
 
-    schema.hasMany(MODELS.notifications, {
-        foreignKey: "caseId"
-    });
-
     schema.hasMany(MODELS.mandatoryNotifications, {
         foreignKey: "caseId"
     });
 
-    schema.hasMany(MODELS.history, {
+    /*
+    schema.hasMany(MODELS.stagings, {
+        foreignKey: "caseId"
+    });
+
+    schema.hasMany(MODELS.notifications, {
         foreignKey: "caseId"
     });
 

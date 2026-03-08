@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: seguimiento-external-api
+    ports:
+      - "8080:8080" # Mapea el puerto local al puerto del contenedor
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      #- NODE_ENV=development
+      #- PORT=3000
+      #- JWT_SECRET=test_secret_key_local_123
+      #- OAUTH2_CLIENT_ID=mock_client_id_local
+      #- OAUTH2_CLIENT_SECRET=mock_client_secret_local
+      - ERROR_LEVEL=0
+
+      - DB_DIALECT=sqlite
+      - DB_STORAGE=':memory:'
+      - LOCAL="true"
+      #- DB_DIALECT=postgres
+      #- DB_PORT=5432
+      #- DB_PORT=54322
+      #- DB_HOST=0.0.0.0
+      #- DB_USER=clusteradmin
+      #- DB_PASS="zEHyhmooQzJY1mMunU'5d0A1C1IuDA"
+      #- DB_DB=seguimientodb
+
+
+    # command: npx nodemon server.js # Descomenta esto si quieres auto-reload al guardar archivos

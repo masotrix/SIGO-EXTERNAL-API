@@ -19,7 +19,7 @@ export default async ({ body, MODELS, model }) => {
 
         /*
         observations:
-            (field, body) => validations.optional({ body },
+            (field, body) => validations.optional({ field, body },
                 validations.string({ field, body })),
         */
     };

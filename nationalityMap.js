@@ -1,4 +1,4 @@
 export default {
-    'Afganistán': 1,
-    'Chile': 41,
+    'Afganistán': '1',
+    'Chile': '41',
 };

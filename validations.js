@@ -1,20 +1,18 @@
 import * as fuzz from 'fuzzball';
 
+const isEmpty = value =>
+    value === null || value === undefined || value === '';
+
 export const optional = ({ field, body }, ret) => {
 
-    const value = body?.[field];
-
-    const isEmpty =
-        value === null || value === undefined || value === '';
-
-    if (isEmpty) { return false; }
+    if (isEmpty(body?.[field])) { return false; }
 
     return ret;
 }
 
 export const notEmpty = ({ field, body }) => {
 
-    if (!body?.[field]) {
+    if (isEmpty(body?.[field])) {
         return { [field]: `Campo '${field}' obligatorio, `+
             `pero valor '${body?.[field]}' no contiene información.` }
     }
@@ -371,7 +369,7 @@ export const validate =
 
     for (let field in defaultDic) {
         if (field in body && body[field]) continue;
-        if (!defaultDic[field]) continue;
+        if (defaultDic[field] === undefined) continue;
         body[field] = defaultDic[field];
     }
 

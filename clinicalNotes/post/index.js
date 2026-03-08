@@ -22,6 +22,10 @@ export default async ({ body, MODELS, MODULES }) => {
         originOrganizationId: associatedCase.organizationId,
     });
 
+    if (newHistory.status === 400) {
+        return { status: 400, body: newHistory.body };
+    }
+
     //console.log('newHistory', newHistory);
 
     return { body: newClinicalNote };

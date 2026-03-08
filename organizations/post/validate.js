@@ -41,7 +41,8 @@ export default async ({ body, MODELS, model }) => {
                 categories: healthcareServices }),
 
         deisCode:
-            (field, body) => validations.string({ field, body }),
+            async (field, body) => { return await validations.unique({
+                field, body, MODELS, model }) },
     };
 
     const defaultDic = { id: randomUUID(), };

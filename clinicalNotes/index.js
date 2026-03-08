@@ -1,5 +1,7 @@
 import get from './get/index.js'
 import post from './post/index.js'
+import patchContent from './patchContent/index.js';
+import patchDelete from './patchDelete/index.js';
 import model from './model.js'
 
 export default {
@@ -7,6 +9,8 @@ export default {
     model,
     endpoints: {
         get,
-        post
+        post,
+        patchContent,
+        patchDelete,
     }
 };

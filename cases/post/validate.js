@@ -78,7 +78,7 @@ export default async ({ body, MODELS, model }) => {
                 field, body, MODELS, model: 'patients' }),
 
         laterality:
-            (field, body) => validations.optional({ body },
+            (field, body) => validations.optional({ field, body },
                 validations.categorical({
                     field, body, categories: lateralityV })),
 
@@ -102,7 +102,7 @@ export default async ({ body, MODELS, model }) => {
             (field, body) => validations.date({ field, body }),
 
         status:
-            (field, body) => validations.optional({ body },
+            (field, body) => validations.optional({ field, body },
                 validations.categorical({
                     field, body, categories: statusV })),
     };
