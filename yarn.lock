@@ -498,10 +498,10 @@ minimist@^1.2.0, minimist@^1.2.3:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
 
-minimonolith@^0.26.19:
-  version "0.26.19"
-  resolved "https://registry.yarnpkg.com/minimonolith/-/minimonolith-0.26.19.tgz#606619bd8bf409a8e74934210720c8430481e7d6"
-  integrity sha512-D0CRfpJMEEFoNv+yYyKWSp4jTqXA4C6Zm7AvqD/aO0zxT4Z8drY0Rn1hLRdOveFN3dRKlnA/r8hGG7/HGc6hiQ==
+minimonolith@^0.26.21:
+  version "0.26.21"
+  resolved "https://registry.yarnpkg.com/minimonolith/-/minimonolith-0.26.21.tgz#836e95999dc644ca4a19d19aa8f66284f1492925"
+  integrity sha512-MLm/JglDnWaEO4TcK0Ix3A65QxBXUIjWF3PrIPd8jZemd/UGcRjEPpm/Kphs37KKRdCVB1gBAVOlXbCDiOuCcA==
   dependencies:
     lambda-api "^1.0.1"
     sequelize "^6.30.0"
