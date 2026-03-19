@@ -9,6 +9,9 @@ import tasks from './tasks/index.js'
 import mandatoryNotifications from './mandatoryNotifications/index.js'
 import history from './history/index.js'
 import resolutions from './resolutions/index.js'
+import s3 from './s3/index.js';
+import kms from './kms/index.js';
+//import ses from './ses/index.js';
 
 /*
 import file from './file/index.js'
@@ -28,6 +31,9 @@ await API.postModule(tasks);
 await API.postModule(mandatoryNotifications);
 await API.postModule(history);
 await API.postModule(resolutions);
+await API.postModule(s3);
+await API.postModule(kms);
+//await API.postModule(ses);
 
 /*
 await API.postModule(file);

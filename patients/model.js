@@ -3,14 +3,13 @@ export default (serviceName) => (orm, types) => {
   const schema = orm.define(serviceName, {
     id: { type: types.TEXT, primaryKey: true },
     organizationId: { type: types.TEXT, allowNull: false },
-    documentNumber: { type: types.TEXT,
-        allowNull: false, unique: true },
+    documentNumber: { type: types.TEXT, allowNull: false},
     documentTypeCode: { type: types.TEXT, allowNull: false },
     names: { type: types.TEXT, allowNull: false },
     lastName: { type: types.TEXT, allowNull: false },
     secondLastName: { type: types.TEXT },
     socialName: { type: types.TEXT },
-    bornDate: { type: types.DATE },
+    bornDate: { type: types.DATE(3) },
     isDeceased: { type: types.BOOLEAN,
         allowNull: false, defaultValue: false },
     biologicalSexCode: { type: types.TEXT },
@@ -20,7 +19,7 @@ export default (serviceName) => (orm, types) => {
     communeCode: { type: types.TEXT },
     provinceCode: { type: types.TEXT },
     forecastCode: { type: types.TEXT },
-    trackCode: { type: types.TEXT, allowNull: false },
+    trackCode: { type: types.TEXT },
     countryCode: { type: types.TEXT },
     address: { type: types.TEXT },
     addressNumber: { type: types.TEXT },
@@ -32,6 +31,7 @@ export default (serviceName) => (orm, types) => {
     spPhoneNumber: { type: types.TEXT },
     spEmail: { type: types.TEXT },
     ecogStage: { type: types.TEXT },
+    lastCivilRegistrySyncAt: { type: types.DATE },
 
   }, { updatedAt: false });
 

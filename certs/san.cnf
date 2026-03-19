@@ -1,0 +1,24 @@
+# Generar key.pem y cert.pem mediante:
+# openssl req -new -nodes -out cert.csr -keyout key.pem -config san.cnf
+# Firmarla
+# openssl x509 -req -in cert.csr -signkey key.pem -out cert.pem -days 365 -extensions req_ext -extfile san.cnf
+# Generar cert.cer mediante: openssl x509 -outform der -in cert.pem -out cert.cer
+
+[req]
+default_bits       = 2048
+prompt             = no
+default_md         = sha256
+req_extensions     = req_ext
+distinguished_name = dn
+
+[dn]
+CN = apilocalhost.ci3.cl
+
+[req_ext]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = apilocalhost.ci3.cl
+DNS.2 = localhost
+DNS.3 = 127.0.0.1
+DNS.4 = ::1

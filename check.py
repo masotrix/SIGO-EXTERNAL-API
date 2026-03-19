@@ -5,37 +5,21 @@ from rut import rut_sin_dv, calcular_dv
 
 #domain = 'http://localhost:8080';
 domain = 'https://external.api-sigo-qa.minsal.cl';
+#domain = 'http://50.18.20.221:8888';
 
-def query(url, payload, method='post'):
-    headers = { "Content-Type": "application/json" }
-    if method=='post':
-        response = requests.post(url, json=payload, headers=headers)
-        if response.status_code != 201:
-            print("Error en consulta:", response.status_code)
-            print("Detalle:", response.text)
-            sys.exit()
-    if method=='patch':
-        response = requests.patch(url, json=payload, headers=headers)
-        if response.status_code != 200:
-            print("Error en consulta:", response.status_code)
-            print("Detalle:", response.text)
-            sys.exit()
+def query(url):
+    response = requests.get(url)
     data = response.json()
     return data;
 
 model = 'organizations'
-url = f"{domain}/{model}/post"
-payload = {
-    "name": f"TestOrg {uuid.uuid4()}",
-    "description": "Org needed for testing",
-    "region": "De Tarapacá",
-    "comuna": "Iquique",
-    "healthcareService": "Servicio de Salud Metropolitano Sur",
-    "organizationType": "Hospital",
-    "deisCode": "52346"
-}
-organization = query(url, payload);
-#print(organization);
+url = f"{domain}/{model}/get"
+organizations = query(url);
+print('organizations', organizations);
+
+sys.exit();
+
+
 print('Organizacion cargada...');
 
 model = 'organizations'
@@ -47,7 +31,7 @@ payload = {
     "comuna": "Iquique",
     "healthcareService": "Servicio de Salud Metropolitano Sur",
     "organizationType": "Hospital",
-    "deisCode": "54326",
+    "deisCode": "54321",
 }
 organization2 = query(url, payload);
 #print(organization);
@@ -320,23 +304,23 @@ random_rut_sin_dv = str(rut_sin_dv());
 random_rut_dv = calcular_dv(random_rut_sin_dv);
 rut = str(random_rut_sin_dv) + '-' + str(random_rut_dv);
 payload = {
-    "organizationId": organization["id"],
-    "caseId": case["id"],
-    "topographyCode": "C00.0",
-    "topographyDescription": "Labio superior, cara externa",
-    "morphologyCode": "8000/0",
-    "morphologyDescription": "Tumor benigno",
-    "behavior": "Benigno / 0",
-    "differentiationGrade": "Bien diferenciado",
-    "extension": "",
-    #"stagingPrefix": "Patológica",
-    "stagingPrefix": "Patologica",
-    "t": "T1",
-    "m": "M1",
-    "n": "N1",
-    "sampleCollectionDate": "2026-02-12",
-    "resultDate": "2026-02-12",
-    "notifierName": "",
+    "organizationId": organization['id'],
+    "caseId": case['id'],
+    "topographyCode": 'C00.0',
+    "topographyDescription": 'Labio superior, cara externa',
+    "morphologyCode": '8000/0',
+    "morphologyDescription": 'Tumor benigno',
+    "behavior": 'Benigno / 0',
+    "differentiationGrade": 'Bien diferenciado',
+    "extension": '',
+    #"stagingPrefix": 'Patológica',
+    "stagingPrefix": 'Patologica',
+    "t": 'T1',
+    "m": 'M1',
+    "n": 'N1',
+    "sampleCollectionDate": '2026-02-12',
+    "resultDate": '2026-02-12',
+    "notifierName": '',
     "notifierDocumentNumber": rut,
 }
 mandatoryNotification = query(url, payload);
